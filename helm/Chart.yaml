@@ -1,0 +1,16 @@
+apiVersion: v2
+name: grafana
+description: Grafana deployment for production-like environment
+type: application
+version: 0.1.0
+appVersion: "11.3.0"
+keywords:
+  - grafana
+  - monitoring
+  - observability
+home: https://grafana.com/
+sources:
+  - https://github.com/grafana/grafana
+maintainers:
+  - name: Grafana Labs
+    email: hello@grafana.com

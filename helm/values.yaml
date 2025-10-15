@@ -1,0 +1,103 @@
+# Grafana Configuration
+replicaCount: 1
+
+image:
+  repository: grafana/grafana
+  tag: "11.3.0"
+  pullPolicy: IfNotPresent
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  hostname: "grafana.amazone.lan"
+  tls:
+    enabled: true
+    clusterIssuer: "local-amazone"
+
+# Persistence configuration (pour les plugins, dashboards, etc.)
+persistence:
+  enabled: true
+  size: 5Gi  # Réduit car plus de DB SQLite
+  accessMode: ReadWriteOnce
+  # storageClassName: ""  # Use default StorageClass
+
+# Resource limits
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# Security configuration
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 472
+  runAsGroup: 472
+  fsGroup: 472
+
+# Admin credentials
+admin:
+  # Password will be auto-generated and stored in secret
+  # existingSecret: ""
+  # existingSecretPasswordKey: ""
+
+# PostgreSQL connection settings
+database:
+  # Informations de connexion à votre serveur PostgreSQL
+  host: "postgres.amazone.lan:5432"  # Remplacez par l'IP/hostname de votre serveur
+  name: "grafana"
+  user: "grafana"
+  sslMode: "disable"  # ou "require" selon votre config
+  # Le mot de passe sera stocké dans un secret Kubernetes
+
+# Grafana configuration
+grafana:
+  # Basic server configuration
+  server:
+    http_port: 3000
+    domain: "grafana.amazone.lan"
+    root_url: "https://grafana.amazone.lan"
+  
+  # Database configuration - PostgreSQL
+  database:
+    type: postgres
+    host: "postgresql-host:5432"  # À modifier avec votre serveur
+    name: grafana
+    user: grafana
+    # Le mot de passe sera lu depuis un secret
+    ssl_mode: disable  # Changez selon votre config SSL
+
+  # Security settings
+  security:
+    admin_user: admin
+    # admin_password will be generated automatically
+
+# Probes configuration
+livenessProbe:
+  enabled: true
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 60
+  timeoutSeconds: 30
+  periodSeconds: 10
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  httpGet:
+    path: /api/health
+    port: 3000
+  initialDelaySeconds: 10
+  timeoutSeconds: 10
+  periodSeconds: 5
+  failureThreshold: 3
