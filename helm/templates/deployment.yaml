@@ -57,8 +57,8 @@ spec:
             - name: GF_DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "grafana.fullname" . }}-db-secret
-                  key: db-password
+                  name: {{ .Values.database.existingSecret }}
+                  key: {{ .Values.database.passwordKey }}
             - name: GF_DATABASE_SSL_MODE
               value: "{{ .Values.database.sslMode }}"
             - name: GF_PATHS_DATA
