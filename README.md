@@ -45,13 +45,32 @@ kubectl create secret generic grafana-db-secret \
     --from-literal=db-password='YOUR_PASSWORD'
 ```
 
-**Configurer l'host PostgreSQL dans `helm/values.yaml` :**
+### Configurer l'host PostgreSQL dans `helm/values.yaml`
+
 ```yaml
 database:
   host: "192.168.1.100:5432"  # Remplacez par votre serveur PostgreSQL
 ```
 
-**Créer la base de données sur PostgreSQL :**
+### Résolution DNS (si nécessaire)
+
+Le cluster doit pouvoir résoudre `postgres.amazone.lan`. Deux options:
+
+1. Ajouter un enregistrement dans votre DNS/CoreDNS
+2. Configurer `database.hostAlias` dans `values.yaml` :
+
+```yaml
+database:
+  host: "postgres.amazone.lan:5432"
+  hostAlias:
+    enabled: true
+    ip: "192.168.1.20"
+    hostnames:
+      - "postgres.amazone.lan"
+```
+
+### Créer la base de données sur PostgreSQL
+
 ```sql
 CREATE DATABASE grafana;
 CREATE USER grafana WITH PASSWORD 'YOUR_PASSWORD';

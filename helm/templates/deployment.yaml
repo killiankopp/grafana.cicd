@@ -24,6 +24,14 @@ spec:
     spec:
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
+      {{- if and .Values.database.hostAlias.enabled .Values.database.hostAlias.ip (.Values.database.hostAlias.hostnames | len) }}
+      hostAliases:
+        - ip: "{{ .Values.database.hostAlias.ip }}"
+          hostnames:
+            {{- range .Values.database.hostAlias.hostnames }}
+            - "{{ . }}"
+            {{- end }}
+      {{- end }}
       containers:
         - name: grafana
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

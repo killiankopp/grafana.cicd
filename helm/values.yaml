@@ -60,6 +60,10 @@ database:
   # Secret existant (créé manuellement)
   existingSecret: "grafana-db-secret"
   passwordKey: "db-password"
+  hostAlias:
+    enabled: false
+    ip: ""
+    hostnames: []
 
 # Grafana configuration
 grafana:
