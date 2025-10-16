@@ -53,7 +53,7 @@ admin:
 # PostgreSQL connection settings
 database:
   type: postgres
-  host: "postgres.amazone.lan:5432"  # Remplacez par l'IP/hostname de votre serveur
+  host: "10.0.0.212:5432"  # Remplacez par l'IP/hostname de votre serveur
   name: "grafana"
   user: "grafana"
   sslMode: "disable"  # ou "require" selon votre config
