@@ -77,6 +77,21 @@ CREATE USER grafana WITH PASSWORD 'YOUR_PASSWORD';
 GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;
 ```
 
+### Accorder les privilèges PostgreSQL
+
+Les migrations Grafana nécessitent la création de tables, index et séquences. Connectez-vous avec un rôle superuser ou propriétaire et exécutez :
+
+```sql
+ALTER DATABASE grafana OWNER TO grafana;
+ALTER SCHEMA public OWNER TO grafana;
+GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;
+GRANT ALL PRIVILEGES ON SCHEMA public TO grafana;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO grafana;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO grafana;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO grafana;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO grafana;
+```
+
 ### 2. Déployer l'application ArgoCD
 ```bash
 kubectl apply -f argocd/app.yaml
