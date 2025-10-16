@@ -47,7 +47,7 @@ spec:
             - name: GF_SERVER_ROOT_URL
               value: "{{ .Values.grafana.server.root_url }}"
             - name: GF_DATABASE_TYPE
-              value: "{{ .Values.grafana.database.type }}"
+              value: "{{ .Values.database.type }}"
             - name: GF_DATABASE_HOST
               value: "{{ .Values.database.host }}"
             - name: GF_DATABASE_NAME

@@ -52,7 +52,7 @@ admin:
 
 # PostgreSQL connection settings
 database:
-  # Informations de connexion à votre serveur PostgreSQL
+  type: postgres
   host: "postgres.amazone.lan:5432"  # Remplacez par l'IP/hostname de votre serveur
   name: "grafana"
   user: "grafana"
@@ -68,15 +68,6 @@ grafana:
     http_port: 3000
     domain: "grafana.amazone.lan"
     root_url: "https://grafana.amazone.lan"
-  
-  # Database configuration - PostgreSQL
-  database:
-    type: postgres
-    host: "postgres.amazone.lan:5432"  # À modifier avec votre serveur
-    name: grafana
-    user: grafana
-    # Le mot de passe sera lu depuis un secret
-    ssl_mode: disable  # Changez selon votre config SSL
 
   # Security settings
   security:
