@@ -32,12 +32,38 @@
 
 ## Déploiement
 
-### 1. Déployer l'application ArgoCD
+### 1. Configuration PostgreSQL (OBLIGATOIRE)
+
+**Créer le secret avec le mot de passe DB :**
+```bash
+# Créer le namespace
+kubectl create namespace grafana
+
+# Créer le secret (remplacez YOUR_PASSWORD)
+kubectl create secret generic grafana-db-secret \
+    -n grafana \
+    --from-literal=db-password='YOUR_PASSWORD'
+```
+
+**Configurer l'host PostgreSQL dans `helm/values.yaml` :**
+```yaml
+database:
+  host: "192.168.1.100:5432"  # Remplacez par votre serveur PostgreSQL
+```
+
+**Créer la base de données sur PostgreSQL :**
+```sql
+CREATE DATABASE grafana;
+CREATE USER grafana WITH PASSWORD 'YOUR_PASSWORD';
+GRANT ALL PRIVILEGES ON DATABASE grafana TO grafana;
+```
+
+### 2. Déployer l'application ArgoCD
 ```bash
 kubectl apply -f argocd/app.yaml
 ```
 
-### 2. Vérifier le déploiement
+### 3. Vérifier le déploiement
 ```bash
 # Status ArgoCD
 kubectl get application grafana -n argocd
@@ -49,8 +75,9 @@ kubectl get pods -n grafana
 kubectl get secret grafana-admin-secret -n grafana -o jsonpath='{.data.admin-password}' | base64 -d
 ```
 
-### 3. Accès à Grafana
-- **URL**: https://grafana.amazone.lan
+### 4. Accès à Grafana
+
+- **URL**: <https://grafana.amazone.lan>
 - **Username**: admin
 - **Password**: Récupérer via la commande ci-dessus
 
@@ -79,9 +106,11 @@ Modifier `replicaCount` dans `values.yaml` (déconseillé avec PVC)
 Le stockage persistant est sur PVC. Implémenter une stratégie de backup selon vos besoins.
 
 ## Limitations
-- **Single replica**: Grafana utilise un PVC, ne supporte pas le scale horizontal par défaut
-- **Database**: SQLite par défaut, considérer une DB externe pour la production
+
+- **Database PostgreSQL**: Nécessite un serveur PostgreSQL externe accessible depuis le cluster
+- **Scale horizontal**: Possible avec PostgreSQL (contrairement à SQLite)  
 - **Monitoring**: Pas de monitoring intégré (Prometheus, logs)
+- **Secrets**: Le mot de passe PostgreSQL doit être créé manuellement dans Kubernetes
 
 ## Sécurité
 - TLS activé via cert-manager
